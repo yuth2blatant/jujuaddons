@@ -1,0 +1,73 @@
+if not juju then return end; --// check if juju is loaded
+
+--// services
+local Player = game:GetService("Players").LocalPlayer
+local Mouse = Player:GetMouse()
+local runservice = game:GetService("RunService")
+
+
+--//variablessss
+local script = {
+    functions = {},
+    luaworkspace = Instance.new("Folder", workspace),
+    locals = {
+        macro = nil
+    },
+
+    elements = {},
+
+    flags = juju.flags
+};
+
+script.functions.createelement = function(name: string, section: any, info: any): any?
+    local element = section:newElement(info);
+    script.elements[name] = element;
+    return element;
+end;
+
+--//
+
+runservice.Heartbeat:Connect(function()
+    if script.flags["antimod"] then
+        local mods = {
+            1884202010, 352087139, 2598041621, 93101606,
+            163721789, 89473551, 2395613299, 3944434729,
+            1830168970, 29242182, 1553950697, 8195210,
+        }
+        
+        --// 
+        local function kickMod(player)
+            local localPlayer = game.Players.LocalPlayer
+            local userId = player.UserId
+            if table.find(mods, userId) then
+                localPlayer:Kick("Oopsie, a mod joined :p")
+            end
+        end
+        
+        --// connecting :p
+        game.Players.PlayerAdded:Connect(kickMod)
+        
+        --//
+        for _, player in ipairs(game.Players:GetPlayers()) do
+            kickMod(player)
+        end
+        
+    end
+end)
+
+
+
+
+
+--//
+local macro = script.functions.createelement("antimod", juju.section, { --// in the docs it should be juju.lua_section but its juju.section
+        name = "Anti Mod",
+        types = {
+            toggle = {
+                flag = "antimod", 
+                default = false
+
+            },
+        }
+    });
+
